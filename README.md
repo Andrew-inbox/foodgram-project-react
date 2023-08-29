@@ -78,35 +78,11 @@ sudo chmod +x /usr/local/bin/docker-compose
 scp docker-compose.yml <username>@<host>:/home/<username>/docker-compose.yml
 scp nginx.conf <username>@<host>:/home/<username>/nginx.conf
 ```
-* Для работы с Workflow добавьте в Secrets GitHub переменные окружения для работы:
-    ```
-    DB_ENGINE=<django.db.backends.postgresql>
-    DB_NAME=<имя базы данных postgres>
-    DB_USER=<пользователь бд>
-    DB_PASSWORD=<пароль>
-    DB_HOST=<db>
-    DB_PORT=<5432>
-    DOCKER_PASSWORD=<пароль от DockerHub>
-    DOCKER_USERNAME=<имя пользователя>
-    SECRET_KEY=<секретный ключ проекта django>
-    USER=<username для подключения к серверу>
-    HOST=<IP сервера>
-    PASSPHRASE=<пароль для сервера, если он установлен>
-    SSH_KEY=<ваш SSH ключ (для получения команда: cat ~/.ssh/id_rsa)>
-    TELEGRAM_TO=<ID чата, в который придет сообщение>
-    TELEGRAM_TOKEN=<токен вашего бота>
-    ```
-    Workflow состоит из четырех шагов:
-     - Проверка кода на соответствие PEP8;
-     - Сборка и публикация образа бекенда на DockerHub;
-     - Автоматический деплой на удаленный сервер;
-     - Отправка уведомления в телеграм-чат.  
-  
-    - Создать суперпользователя Django:
+
+ * Создайте суперпользователя:
     ```
     sudo docker-compose exec backend python manage.py createsuperuser
     ```
-    - Проект будет доступен по вашему IP или доменному имени(если создано).
 
 ## Проект доступен
 name_kittygram: https://kittygramisdone.ddns.net;
