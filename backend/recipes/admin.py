@@ -5,8 +5,8 @@ from import_export.resources import ModelResource
 from .models import (
     Favorite,
     Ingredient,
-    RecipeIngredient,
     Recipe,
+    RecipeIngredient,
     ShoppingCart,
     Tag,
 )

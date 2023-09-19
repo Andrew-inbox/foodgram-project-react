@@ -3,11 +3,11 @@ from django.shortcuts import get_object_or_404
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 
-from .models import Ingredient, RecipeIngredient, Recipe, Tag
+from .models import Ingredient, Recipe, RecipeIngredient, Tag
 from .validators import (
-    RecipeIngredientFieldValidator,
     ColorFieldValidator,
     CookingTimeRecipeFieldValidator,
+    RecipeIngredientFieldValidator,
 )
 from users.serializers import UserListSerializer
 
