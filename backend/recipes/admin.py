@@ -5,7 +5,7 @@ from import_export.resources import ModelResource
 from .models import (
     Favorite,
     Ingredient,
-    IngredientAmount,
+    RecipeIngredient,
     Recipe,
     ShoppingCart,
     Tag,
@@ -28,7 +28,7 @@ class RecipeResource(ModelResource):
 class IngredientsInline(admin.TabularInline):
     """"""
 
-    model = IngredientAmount
+    model = RecipeIngredient
     extra = 0
     min_num = 1
 
@@ -99,11 +99,11 @@ class IngredientAdmin(ImportExportModelAdmin):
     )
 
 
-class IngredientAmountResource(ModelResource):
+class RecipeIngredientResource(ModelResource):
     """"""
 
     class Meta:
-        model = IngredientAmount
+        model = RecipeIngredient
         fields = (
             'id',
             'recipe',
@@ -112,11 +112,11 @@ class IngredientAmountResource(ModelResource):
         )
 
 
-@admin.register(IngredientAmount)
-class IngredientAmountAdmin(ImportExportModelAdmin):
+@admin.register(RecipeIngredient)
+class RecipeIngredientAdmin(ImportExportModelAdmin):
     """"""
 
-    resource_classes = (IngredientAmountResource,)
+    resource_classes = (RecipeIngredientResource,)
     list_display = (
         'id',
         'recipe',

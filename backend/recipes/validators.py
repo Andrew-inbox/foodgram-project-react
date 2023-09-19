@@ -40,7 +40,7 @@ class CookingTimeRecipeFieldValidator(serializers.Field):
         return data
 
 
-class AmountIngredientFieldValidator(serializers.Field):
+class RecipeIngredientFieldValidator(serializers.Field):
     def to_representation(self, value):
         return value
 

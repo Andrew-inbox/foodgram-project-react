@@ -131,5 +131,5 @@ class RecipeViewSet(
         response = HttpResponse(buy_list_pdf, content_type='application/pdf')
         response[
             'Content-Disposition'
-        ] = 'attachment; filename=shopping_list.pdf'
+        ] = 'attachment; filename=shopping-list.pdf'
         return response

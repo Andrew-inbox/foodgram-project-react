@@ -7,13 +7,13 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
-from recipes.models import Ingredient, IngredientAmount
+from recipes.models import Ingredient, RecipeIngredient
 
 
 def create_shopping_list_pdf(shopping_cart):
     recipes = shopping_cart.values_list('recipe_id', flat=True)
     buy_list = (
-        IngredientAmount.objects.filter(recipe__in=recipes)
+        RecipeIngredient.objects.filter(recipe__in=recipes)
         .values('ingredient')
         .annotate(amount=Sum('amount'))
     )

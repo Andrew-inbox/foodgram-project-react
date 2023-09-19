@@ -75,7 +75,7 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='IngredientAmount',
+        through='RecipeIngredient',
     )
     tags = models.ManyToManyField(
         Tag,
@@ -137,7 +137,7 @@ class Recipe(models.Model):
         super().clean()
 
 
-class IngredientAmount(models.Model):
+class RecipeIngredient(models.Model):
     """Модель количества ингредиентов."""
 
     recipe = models.ForeignKey(

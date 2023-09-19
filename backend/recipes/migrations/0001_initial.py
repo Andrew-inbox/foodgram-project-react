@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='IngredientAmount',
+            name='RecipeIngredient',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('amount', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(limit_value=1, message='Ингредиентов не может быть меньше 1!'), django.core.validators.MaxValueValidator(limit_value=50000, message='Ингредиентов не может быть больше 50000!')], verbose_name='Количество')),
