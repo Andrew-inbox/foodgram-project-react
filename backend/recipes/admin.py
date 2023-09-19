@@ -1,47 +1,176 @@
 from django.contrib import admin
-from django.contrib.admin import display
+from import_export.admin import ImportExportModelAdmin
+from import_export.resources import ModelResource
 
-from .models import (Favourite, Ingredient, IngredientInRecipe, Recipe,
-                     ShoppingList, Tag)
+from .models import (
+    Favorite,
+    Ingredient,
+    IngredientAmount,
+    Recipe,
+    ShoppingCart,
+    Tag,
+)
 
 
-class RecipesInline(admin.StackedInline):
-    model = IngredientInRecipe
+class RecipeResource(ModelResource):
+    """"""
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id',
+            'name',
+            'author',
+            'pub_date',
+        )
+
+
+class IngredientsInline(admin.TabularInline):
+    """"""
+
+    model = IngredientAmount
+    extra = 0
     min_num = 1
 
 
 @admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id', 'author', 'added_in_favorites')
-    readonly_fields = ('added_in_favorites',)
-    list_filter = ('author', 'name', 'tags',)
+class RecipeAdmin(ImportExportModelAdmin):
+    """"""
 
-    @display(description='Количество в избранных')
-    def added_in_favorites(self, obj):
-        return obj.favorites.count()
-
-
-@admin.register(IngredientInRecipe)
-class IngredientInRecipeAdmin(admin.ModelAdmin):
-    list_display = ('recipe', 'ingredient', 'amount',)
-
-
-@admin.register(Favourite)
-class FavouriteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe',)
+    resource_class = (RecipeResource,)
+    inlines = (IngredientsInline,)
+    list_display = (
+        'id',
+        'name',
+        'author',
+    )
+    list_filter = ('author', 'name', 'tags')
+    search_fields = ('name', 'author')
 
 
-@admin.register(Ingredient)
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'measurement_unit',)
-    list_filter = ('name',)
+class TagResource(ModelResource):
+    """Модель ресурсов тегов."""
+
+    class Meta:
+        model = Tag
+        fields = (
+            'id',
+            'name',
+            'color',
+            'slug',
+        )
 
 
 @admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color', 'slug',)
+class TagAdmin(ImportExportModelAdmin):
+    """"""
+
+    resource_class = (TagResource,)
+    list_display = (
+        'id',
+        'name',
+        'color',
+        'slug',
+    )
+    search_fields = ('name', 'color', 'slug')
 
 
-@admin.register(ShoppingList)
-class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe',)
+class IngredientResource(ModelResource):
+    """"""
+
+    class Meta:
+        model = Ingredient
+        fields = (
+            'id',
+            'name',
+            'measurement_unit',
+        )
+
+
+@admin.register(Ingredient)
+class IngredientAdmin(ImportExportModelAdmin):
+    """"""
+
+    resource_classes = (IngredientResource,)
+    list_display = (
+        'id',
+        'name',
+        'measurement_unit',
+    )
+
+
+class IngredientAmountResource(ModelResource):
+    """"""
+
+    class Meta:
+        model = IngredientAmount
+        fields = (
+            'id',
+            'recipe',
+            'ingredient',
+            'amount',
+        )
+
+
+@admin.register(IngredientAmount)
+class IngredientAmountAdmin(ImportExportModelAdmin):
+    """"""
+
+    resource_classes = (IngredientAmountResource,)
+    list_display = (
+        'id',
+        'recipe',
+        'ingredient',
+        'amount',
+    )
+    search_fields = ('recipe', 'ingredient')
+
+
+class FavoriteResource(ModelResource):
+    """"""
+
+    class Meta:
+        model = Favorite
+        fields = (
+            'id',
+            'user',
+            'recipe',
+        )
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(ImportExportModelAdmin):
+    """"""
+
+    resource_classes = (FavoriteResource,)
+    list_display = (
+        'id',
+        'user',
+        'recipe',
+    )
+    search_fields = ('user', 'recipe')
+
+
+class ShoppingCartResource(ModelResource):
+    """"""
+
+    class Meta:
+        model = ShoppingCart
+        fields = (
+            'id',
+            'user',
+            'recipe',
+        )
+
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(ImportExportModelAdmin):
+    """"""
+
+    resource_classes = (ShoppingCartResource,)
+    list_display = (
+        'id',
+        'user',
+        'recipe',
+    )
+    search_fields = ('user', 'recipe')

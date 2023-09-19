@@ -1,0 +1,42 @@
+version: '3.3'
+
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
+  db:
+    env_file: .env
+    image: postgres:13
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    restart: always
+
+  backend:
+    env_file: .env
+    image: andrewinbox2023/foodgram_backend:latest
+    volumes:
+      - static:/app/static/
+      - media:/app/media/
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    image: andrewinbox2023/foodgram_frontend:latest
+    command: cp -r /app/build/. /app/static/
+    volumes:
+      - static:/app/static/
+
+  gateway:
+    image: andrewinbox2023/foodgram_gateway:latest
+    ports:
+      - 8000:80
+    volumes:
+      - static:/app/static/
+      - media:/app/media/
+    depends_on:
+      - backend
+      - frontend
+    restart: always

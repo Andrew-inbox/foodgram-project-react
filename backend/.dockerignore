@@ -1,8 +1,4 @@
 venv
 .git
 db.sqlite3
-.idea
-.vscode
-.env
-env.bak/
-venv.bak/
+sent_emails
