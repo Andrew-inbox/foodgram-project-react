@@ -24,7 +24,7 @@ class UserResource(ModelResource):
 
 @admin.register(User)
 class UserAdmin(ImportExportModelAdmin):
-    """"""
+    """Административная панель для пользователей."""
 
     resource_class = (UserResource,)
     list_display = (
@@ -41,7 +41,7 @@ class UserAdmin(ImportExportModelAdmin):
 
 
 class SubscribeResource(ModelResource):
-    """"""
+    """Модель ресурсов подписок."""
 
     class Meta:
         model = Subscribe
@@ -54,7 +54,7 @@ class SubscribeResource(ModelResource):
 
 @admin.register(Subscribe)
 class SubscribeAdmin(ImportExportModelAdmin):
-    """"""
+    """ Административная панель для модели подписок."""
 
     resource_class = (SubscribeResource,)
     list_display = (

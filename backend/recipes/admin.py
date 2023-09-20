@@ -8,7 +8,9 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
 
 
 class RecipeResource(ModelResource):
-    """"""
+    """
+    Ресурс модели рецепта.
+    """
 
     class Meta:
         model = Recipe
@@ -21,7 +23,7 @@ class RecipeResource(ModelResource):
 
 
 class IngredientsInline(admin.TabularInline):
-    """"""
+    """Встроенный класс для ингредиентов."""
 
     model = RecipeIngredient
     extra = 0
@@ -30,7 +32,7 @@ class IngredientsInline(admin.TabularInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
-    """"""
+    """Административный класс для рецепта."""
 
     resource_class = (RecipeResource,)
     inlines = (IngredientsInline,)
@@ -44,7 +46,7 @@ class RecipeAdmin(ImportExportModelAdmin):
 
 
 class TagResource(ModelResource):
-    """Модель ресурсов тегов."""
+    """ Ресурс модели тегов."""
 
     class Meta:
         model = Tag
@@ -58,7 +60,7 @@ class TagResource(ModelResource):
 
 @admin.register(Tag)
 class TagAdmin(ImportExportModelAdmin):
-    """"""
+    """Модель ресурсов тегов администратора"""
 
     resource_class = (TagResource,)
     list_display = (
@@ -71,7 +73,7 @@ class TagAdmin(ImportExportModelAdmin):
 
 
 class IngredientResource(ModelResource):
-    """"""
+    """Ресурс для модели ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -84,7 +86,7 @@ class IngredientResource(ModelResource):
 
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
-    """"""
+    """Класс для администрирования ингредиентов."""
 
     resource_classes = (IngredientResource,)
     list_display = (
@@ -95,7 +97,7 @@ class IngredientAdmin(ImportExportModelAdmin):
 
 
 class RecipeIngredientResource(ModelResource):
-    """"""
+    """Ресурс для модели ингредиентов рецепта."""
 
     class Meta:
         model = RecipeIngredient
@@ -109,7 +111,7 @@ class RecipeIngredientResource(ModelResource):
 
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(ImportExportModelAdmin):
-    """"""
+    """Класс для администрирования ингредиентов рецепта."""
 
     resource_classes = (RecipeIngredientResource,)
     list_display = (
@@ -122,7 +124,7 @@ class RecipeIngredientAdmin(ImportExportModelAdmin):
 
 
 class FavoriteResource(ModelResource):
-    """"""
+    """Ресурс для модели избранных рецептов."""
 
     class Meta:
         model = Favorite
@@ -135,7 +137,7 @@ class FavoriteResource(ModelResource):
 
 @admin.register(Favorite)
 class FavoriteAdmin(ImportExportModelAdmin):
-    """"""
+    """Класс для администрирования избранных рецептов."""
 
     resource_classes = (FavoriteResource,)
     list_display = (
@@ -147,7 +149,7 @@ class FavoriteAdmin(ImportExportModelAdmin):
 
 
 class ShoppingCartResource(ModelResource):
-    """"""
+    """Ресурс для модели корзины покупок."""
 
     class Meta:
         model = ShoppingCart
@@ -160,7 +162,7 @@ class ShoppingCartResource(ModelResource):
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(ImportExportModelAdmin):
-    """"""
+    """Класс для администрирования корзины покупок."""
 
     resource_classes = (ShoppingCartResource,)
     list_display = (

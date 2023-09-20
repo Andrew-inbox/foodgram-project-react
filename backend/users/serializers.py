@@ -11,7 +11,7 @@ from .validators import UsernameFieldValidator
 
 
 class UserCreateSerializer(UserCreateSerializer):
-    """"""
+    """Сериалайзер для создания нового пользователя."""
 
     username = UsernameFieldValidator()
 
@@ -27,7 +27,7 @@ class UserCreateSerializer(UserCreateSerializer):
 
 
 class UserListSerializer(UserSerializer):
-    """"""
+    """Сериализатор для подписанных пользователей."""
 
     is_subscribed = serializers.SerializerMethodField()
 
@@ -60,14 +60,14 @@ class UserListSerializer(UserSerializer):
 
 
 class UserSetPasswordSerializer(serializers.Serializer):
-    """"""
+    """Сериализатор для создания пароля."""
 
     new_password = serializers.CharField(required=True, write_only=True)
     current_password = serializers.CharField(required=True, write_only=True)
 
 
 class RecipeListShortSerializer(serializers.ModelSerializer):
-    """"""
+    """Сериализатор для отображения краткой информации о рецептах."""
 
     image = Base64ImageField(required=True)
 
@@ -77,7 +77,7 @@ class RecipeListShortSerializer(serializers.ModelSerializer):
 
 
 class SubscriptionSerializer(serializers.Serializer):
-    """"""
+    """Сериализатор для перечисления подписок пользователей."""
 
     email = serializers.EmailField()
     id = serializers.IntegerField()
@@ -129,7 +129,7 @@ class SubscriptionSerializer(serializers.Serializer):
 
 
 class SubscribeSerializer(serializers.Serializer):
-    """"""
+    """Сериализатор для оформления подписки на пользователя."""
 
     def validate(self, data):
         user = self.context.get('request').user

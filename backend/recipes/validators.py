@@ -13,10 +13,14 @@ def validate_colorfield(value):
 
 
 class ColorFieldValidator(serializers.Field):
+
+    """ Валидатор для проверки корректности цвета в формате HEX."""
+
     def to_representation(self, value):
         return value
 
     def to_internal_value(self, data):
+        """Проверяет корректность цвета в формате HEX."""
         try:
             data = hex_to_name(data)
         except ValueError:
@@ -25,10 +29,14 @@ class ColorFieldValidator(serializers.Field):
 
 
 class CookingTimeRecipeFieldValidator(serializers.Field):
+
+    """Валидатор для проверки корректности времени приготовления рецепта."""
+
     def to_representation(self, value):
         return value
 
     def to_internal_value(self, data):
+        """Проверяет корректность времени приготовления рецепта."""
         try:
             if 0 >= int(data) > 1000:
                 raise serializers.ValidationError(
@@ -42,10 +50,15 @@ class CookingTimeRecipeFieldValidator(serializers.Field):
 
 
 class RecipeIngredientFieldValidator(serializers.Field):
+
+    """Валидатор для проверки корректности количества ингредиентов в рецепте."""
+
     def to_representation(self, value):
         return value
 
     def to_internal_value(self, data):
+
+        """Проверяет корректность количества ингредиентов в рецепте."""
         try:
             if 0 >= int(data) > 50000:
                 raise serializers.ValidationError(

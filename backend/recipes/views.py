@@ -15,7 +15,7 @@ from .utils import create_shopping_list_pdf
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    """"""
+    """Вьюсет для модели тэги."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -23,7 +23,7 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
-    """"""
+    """Вьюсет для модели ингридиенты."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -40,14 +40,14 @@ class RecipeViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    """"""
+    """Вьюсет для модели рецепты."""
 
     queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
     def get_permissions(self):
-        """"""
+        """Возвращает права доступа в зависимости от действия."""
 
         permissions_dict = {
             'create': [permissions.IsAuthenticated()],
@@ -63,7 +63,7 @@ class RecipeViewSet(
         )
 
     def get_serializer_class(self):
-        """"""
+        """ Возвращает класс сериализатора в зависимости от действия."""
 
         serializer_class_dict = {
             'create': RecipeCreateSerializer,
@@ -77,14 +77,16 @@ class RecipeViewSet(
         return serializer_class_dict.get(self.action, RecipeCreateSerializer)
 
     def perform_create(self, serializer):
+        """Создает объект рецепта и присваивает ему автора."""
         serializer.save(author=self.request.user)
 
     def perform_update(self, serializer):
+        """Обновляет объект рецепта и присваивает ему автора."""
         serializer.save(author=self.request.user)
 
     @action(['POST', 'DELETE'], detail=True)
     def favorite(self, request, pk=None):
-        """"""
+        """Добавляет или удаляет рецепт из избранного."""
 
         if self.request.method == 'POST':
             serializer = self.get_serializer(
@@ -102,7 +104,7 @@ class RecipeViewSet(
 
     @action(['POST', 'DELETE'], detail=True)
     def shopping_cart(self, request, pk=None):
-        """"""
+        """Добавляет или удаляет рецепт из списка покупок."""
 
         if self.request.method == 'POST':
             serializer = self.get_serializer(
@@ -120,7 +122,7 @@ class RecipeViewSet(
 
     @action(['GET'], detail=False)
     def download_shopping_cart(self, request):
-        """"""
+        """Скачивает список покупок в формате PDF."""
 
         shopping_cart = ShoppingCart.objects.filter(user=self.request.user)
         buy_list_pdf = create_shopping_list_pdf(shopping_cart)
