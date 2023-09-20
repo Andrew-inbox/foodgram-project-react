@@ -51,7 +51,7 @@ class CookingTimeRecipeFieldValidator(serializers.Field):
 
 class RecipeIngredientFieldValidator(serializers.Field):
 
-    """Валидатор для проверки корректности количества ингредиентов в рецепте."""
+    """Валидатор для проверки количества ингредиентов в рецепте."""
 
     def to_representation(self, value):
         return value
