@@ -1,11 +1,13 @@
-from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 
+from django.shortcuts import get_object_or_404
+
+from recipes.models import Recipe
+
 from .models import User
 from .validators import UsernameFieldValidator
-from recipes.models import Recipe
 
 
 class UserCreateSerializer(UserCreateSerializer):

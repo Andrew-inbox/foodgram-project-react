@@ -1,11 +1,12 @@
 from datetime import datetime
 from io import BytesIO
 
-from django.conf import settings
-from django.db.models import Sum
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
+
+from django.conf import settings
+from django.db.models import Sum
 
 from recipes.models import Ingredient, RecipeIngredient
 

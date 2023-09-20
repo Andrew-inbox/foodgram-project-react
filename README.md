@@ -1,4 +1,4 @@
-# Foodgram (Фудграм) - это онлайн-платформа, где пользователи могут делиться своими рецептами, идеями и вдохновением в области кулинарии. Сайт предоставляет пользователям возможность публиковать свои рецепты, добавлять понравившиеся рецепты в избранное и подписываться на публикации других авторов.
+# Foodgram (Фудграм) - это онлайн-платформа, где пользователи могут делиться своими рецептами, идеями и вдохновением в области кулинарии.
 
 Фудграм создает пространство, где люди со всего мира могут обмениваться своими кулинарными творениями, находить вдохновение и делиться своим опытом с другими любителями кулинарии. Сайт предлагает удобные инструменты для публикации, сохранения и организации рецептов, а также помогает пользователям планировать и совершать покупки продуктов для приготовления блюд.
 
@@ -53,41 +53,17 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Для запуска frontend(через bash):
+Далее для запуска:
 - запустить bash
 - найти директорию проекта foodgram-project-react
-- пройти в директорию infra.
+- docker-compose up --build
 ```
-cd infra
-docker-compose up --build
-```
-
-## Для работы с удаленным сервером:
-* Установите docker на сервер:
-```
-sudo apt install docker.io 
-```
-* Установите docker-compose на сервер:
-```
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-```
-* Локально отредактируйте файл infra/nginx.conf и в строке server_name впишите свой IP
-* Скопируйте файлы docker-compose.yml и nginx.conf из директории infra на сервер:
-```
-scp docker-compose.yml <username>@<host>:/home/<username>/docker-compose.yml
-scp nginx.conf <username>@<host>:/home/<username>/nginx.conf
-```
-
- * Создайте суперпользователя:
-    ```
-    sudo docker-compose exec backend python manage.py createsuperuser
-    ```
 
 ## Проект доступен
-name_kittygram: https://kittygramisdone.ddns.net;
-login: andrews;
-password: 20232023;
+адрес: foodgramwelldone.serveblog.net;
+логин - admin@admin.ru;
+пароль - admin.
+
 
 ### Фудграм - это место, где каждый найдет что-то для себя. Мы создаем уютную и дружественную атмосферу, где любители кулинарии могут общаться, делиться опытом и наслаждаться вкусными блюдами. Присоединяйтесь к нашему сообществу уже сегодня!
 

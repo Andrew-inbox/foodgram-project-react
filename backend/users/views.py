@@ -1,17 +1,14 @@
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from django.shortcuts import get_object_or_404
+
 from .models import Subscribe, User
-from .serializers import (
-    SubscribeSerializer,
-    SubscriptionSerializer,
-    UserCreateSerializer,
-    UserListSerializer,
-    UserSetPasswordSerializer,
-)
+from .serializers import (SubscribeSerializer, SubscriptionSerializer,
+                          UserCreateSerializer, UserListSerializer,
+                          UserSetPasswordSerializer)
 
 
 class UserViewSet(
