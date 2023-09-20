@@ -8,9 +8,7 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
 
 
 class RecipeResource(ModelResource):
-    """
-    Ресурс модели рецепта.
-    """
+    """Ресурс модели рецепта."""
 
     class Meta:
         model = Recipe
@@ -46,7 +44,7 @@ class RecipeAdmin(ImportExportModelAdmin):
 
 
 class TagResource(ModelResource):
-    """ Ресурс модели тегов."""
+    """Ресурс модели тегов."""
 
     class Meta:
         model = Tag
