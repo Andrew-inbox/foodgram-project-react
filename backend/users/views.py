@@ -26,7 +26,6 @@ class UserViewSet(
 
     def get_permissions(self):
         """Получение прав доступа для каждого действия."""
-
         permissions_dict = {
             'list': [permissions.IsAuthenticated()],
             'retrieve': [permissions.IsAuthenticated()],
@@ -42,7 +41,6 @@ class UserViewSet(
 
     def get_serializer_class(self):
         """Получение класса сериализатора для каждого действия."""
-
         serializer_class_dict = {
             'create': UserCreateSerializer,
             'list': UserListSerializer,
@@ -57,14 +55,12 @@ class UserViewSet(
     @action(['GET'], detail=False)
     def me(self, request):
         """Получение информации о текущем пользователе."""
-
         serializer = self.get_serializer(request.user)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @action(['POST'], detail=False)
     def set_password(self, request):
         """Изменение пароля текущего пользователя."""
-
         user = request.user
         serializer = self.get_serializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -89,7 +85,6 @@ class UserViewSet(
     @action(['GET'], detail=False)
     def subscriptions(self, request):
         """Получение списка подписчиков текущего пользователя."""
-
         user = request.user
         subscribers = User.objects.filter(subscribed__user=user)
         page = self.paginate_queryset(subscribers)
@@ -101,7 +96,6 @@ class UserViewSet(
     @action(['POST', 'DELETE'], detail=True)
     def subscribe(self, request, pk=None):
         """Подписка на пользователя."""
-
         if self.request.method == 'POST':
             serializer = self.get_serializer(
                 data=request.data, context={'request': request, 'id': pk}

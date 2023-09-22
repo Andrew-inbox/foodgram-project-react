@@ -20,16 +20,16 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-
     """Сериалайзер для модели тегов."""
+
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-
     """Сериалайзер для модели ингридиентов."""
+
     id = serializers.IntegerField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
@@ -42,8 +42,8 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientAddSerializer(serializers.ModelSerializer):
-
     """Сериалайзер для модели ингредиентов рецепта."""
+
     id = serializers.IntegerField(source='ingredient.id')
     amount = RecipeIngredientFieldValidator()
 
@@ -101,8 +101,8 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
-
     """Сериалайзер для списка рецептов."""
+
     ingredients = RecipeIngredientAddSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Tag.objects.all()
@@ -164,8 +164,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.Serializer):
-
     """Сериалайзер для добавления рецепта в избранное."""
+
     def validate(self, data):
         user = self.context.get('request').user
         recipe_id = self.context.get('recipe_id')
