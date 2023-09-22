@@ -14,7 +14,7 @@ def validate_colorfield(value):
 
 class ColorFieldValidator(serializers.Field):
 
-    """ Валидатор для проверки корректности цвета в формате HEX."""
+    """Валидатор для проверки корректности цвета в формате HEX."""
 
     def to_representation(self, value):
         return value

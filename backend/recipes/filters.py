@@ -38,11 +38,11 @@ class RecipeFilter(filters.FilterSet):
         )
 
     def filter_is_favorited(self, queryset, name, value):
-        """ Фильтрация избранных рецептов."""
+        """Фильтрация избранных рецептов."""
         if value:
             return queryset.filter(favorite__user=self.request.user)
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
-        """ Фильтрация рецептов в корзине покупок."""
+        """Фильтрация рецептов в корзине покупок."""
         if value:
             return queryset.filter(shoppingcart__user=self.request.user)

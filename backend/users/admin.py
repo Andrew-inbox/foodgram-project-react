@@ -54,7 +54,7 @@ class SubscribeResource(ModelResource):
 
 @admin.register(Subscribe)
 class SubscribeAdmin(ImportExportModelAdmin):
-    """ Административная панель для модели подписок."""
+    """Административная панель для модели подписок."""
 
     resource_class = (SubscribeResource,)
     list_display = (

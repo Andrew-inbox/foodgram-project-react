@@ -63,7 +63,7 @@ class RecipeViewSet(
         )
 
     def get_serializer_class(self):
-        """ Возвращает класс сериализатора в зависимости от действия."""
+        """Возвращает класс сериализатора в зависимости от действия."""
 
         serializer_class_dict = {
             'create': RecipeCreateSerializer,
