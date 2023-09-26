@@ -1,14 +1,17 @@
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from django.shortcuts import get_object_or_404
-
 from .models import Subscribe, User
-from .serializers import (SubscribeSerializer, SubscriptionSerializer,
-                          UserCreateSerializer, UserListSerializer,
-                          UserSetPasswordSerializer)
+from .serializers import (
+    SubscribeSerializer,
+    SubscriptionSerializer,
+    UserCreateSerializer,
+    UserListSerializer,
+    UserSetPasswordSerializer,
+)
 
 
 class UserViewSet(
@@ -107,6 +110,13 @@ class UserViewSet(
         elif self.request.method == 'DELETE':
             user = self.request.user
             author = get_object_or_404(User, pk=pk)
-            subscribe = get_object_or_404(Subscribe, user=user, author=author)
-            subscribe.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            subscribe, created = Subscribe.objects.filter(
+                user=user, author=author
+            ).delete()
+
+            if subscribe > 0:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {'detail': 'Подписка не найдена'},
+                status=status.HTTP_404_NOT_FOUND,
+            )

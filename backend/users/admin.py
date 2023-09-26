@@ -1,32 +1,15 @@
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export.resources import ModelResource
-
-from django.contrib import admin
 
 from .models import Subscribe, User
 
 
-class UserResource(ModelResource):
-    """Модель ресурсов пользователей."""
-
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'is_staff',
-            'date_joined',
-        )
-
-
 @admin.register(User)
-class UserAdmin(ImportExportModelAdmin):
+class UserAdmin(BaseUserAdmin):
     """Административная панель для пользователей."""
 
-    resource_class = (UserResource,)
     list_display = (
         'id',
         'username',
@@ -72,3 +55,11 @@ class SubscribeAdmin(ImportExportModelAdmin):
         'user__first_name',
         'user__last_name',
     ]
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related('author')
+            .prefetch_related('user')
+        )

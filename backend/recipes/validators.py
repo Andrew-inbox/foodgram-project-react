@@ -1,7 +1,6 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from webcolors import hex_to_name
-
-from django.core.exceptions import ValidationError
 
 
 def validate_colorfield(value):
@@ -60,10 +59,10 @@ class RecipeIngredientFieldValidator(serializers.Field):
 
         """Проверяет корректность количества ингредиентов в рецепте."""
         try:
-            if 0 >= int(data) > 50000:
+            if 0 >= int(data) > 32767:
                 raise serializers.ValidationError(
                     'Количество ингредиентов не может быть меньше 1 '
-                    'и больше 5000'
+                    'и больше 32767'
                 )
         except ValueError:
             raise serializers.ValidationError(

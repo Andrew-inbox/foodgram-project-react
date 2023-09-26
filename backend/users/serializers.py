@@ -1,21 +1,20 @@
-from djoser.serializers import UserCreateSerializer, UserSerializer
+from django.shortcuts import get_object_or_404
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from djoser.serializers import UserSerializer as BaseUserSerializer
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 
-from django.shortcuts import get_object_or_404
-
-from recipes.models import Recipe
-
 from .models import User
 from .validators import UsernameFieldValidator
+from recipes.models import Recipe
 
 
-class UserCreateSerializer(UserCreateSerializer):
+class UserCreateSerializer(BaseUserCreateSerializer):
     """Сериалайзер для создания нового пользователя."""
 
     username = UsernameFieldValidator()
 
-    class Meta(UserCreateSerializer.Meta):
+    class Meta(BaseUserCreateSerializer.Meta):
         fields = (
             'email',
             'id',
@@ -26,7 +25,7 @@ class UserCreateSerializer(UserCreateSerializer):
         )
 
 
-class UserListSerializer(UserSerializer):
+class UserListSerializer(BaseUserSerializer):
     """Сериализатор для подписанных пользователей."""
 
     is_subscribed = serializers.SerializerMethodField()
@@ -47,16 +46,15 @@ class UserListSerializer(UserSerializer):
 
         if user.is_authenticated:
             return super().to_representation(instance)
-        else:
-            data = super().to_representation(instance)
-            data['email'], data['username'] = None, None
-            return data
+        data = super().to_representation(instance)
+        data['email'], data['username'] = None, None
+        return data
 
     def get_is_subscribed(self, author):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return None
-        return author.subscribed.filter(user=user).exists()
+        return (
+            user.is_anonymous and author.subscribed.filter(user=user).exists()
+        )
 
 
 class UserSetPasswordSerializer(serializers.Serializer):
@@ -76,23 +74,31 @@ class RecipeListShortSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class SubscriptionSerializer(serializers.Serializer):
+class SubscriptionSerializer(serializers.ModelSerializer):
     """Сериализатор для перечисления подписок пользователей."""
 
-    email = serializers.EmailField()
-    id = serializers.IntegerField()
-    username = serializers.CharField()
-    first_name = serializers.CharField()
-    last_name = serializers.CharField()
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+        )
+
     def get_is_subscribed(self, author):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return None
-        return author.subscribed.filter(user=user).exists()
+        return (
+            user.is_anonymous and author.subscribed.filter(user=user).exists()
+        )
 
     def get_recipes(self, author):
         request = self.context.get('request')
@@ -113,19 +119,6 @@ class SubscriptionSerializer(serializers.Serializer):
 
     def get_recipes_count(self, author):
         return author.recipes.count()
-
-    class Meta:
-        model = User
-        fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
-            'recipes',
-            'recipes_count',
-        )
 
 
 class SubscribeSerializer(serializers.Serializer):

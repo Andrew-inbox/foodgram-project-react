@@ -1,14 +1,15 @@
+from django.db.models import F
+from django.shortcuts import get_object_or_404
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 
-from django.db.models import F
-from django.shortcuts import get_object_or_404
-
-from users.serializers import UserListSerializer
-
 from .models import Ingredient, Recipe, RecipeIngredient, Tag
-from .validators import (ColorFieldValidator, CookingTimeRecipeFieldValidator,
-                         RecipeIngredientFieldValidator)
+from .validators import (
+    ColorFieldValidator,
+    CookingTimeRecipeFieldValidator,
+    RecipeIngredientFieldValidator,
+)
+from users.serializers import UserListSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -95,9 +96,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
     def get_is_in_shopping_cart(self, recipe):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return None
-        return recipe.shoppingcart.filter(user=user).exists()
+        return user.is_anonymous and recipe.shoppingcart(user=user).exists()
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
@@ -121,18 +120,25 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             'cooking_time',
         )
 
+    def validate_ingredients(self, ingredients_data):
+        unique_ingredients = set()
+        for ingredient_data in ingredients_data:
+            ingredient_id = ingredient_data.get('ingredient').get('id')
+            if ingredient_id in unique_ingredients:
+                raise serializers.ValidationError(
+                    {'ingredients': 'Ингредиенты не должны дублироваться'}
+                )
+            unique_ingredients.add(ingredient_id)
+        return ingredients_data
+
     def set_ingredients(self, recipe, ingredients_data):
         ingredients = list()
 
         for ingredient_data in ingredients_data:
             ingredient_id = ingredient_data.get('ingredient').get('id')
             amount = ingredient_data.get('amount')
-            ingredient = Ingredient.objects.get(id=ingredient_id)
+            ingredient = get_object_or_404(Ingredient, id=ingredient_id)
 
-            if RecipeIngredient.objects.filter(
-                recipe=recipe, ingredient=ingredient_id
-            ).exists():
-                amount += F('amount')
             recipe_ingredient = RecipeIngredient(
                 recipe=recipe, ingredient=ingredient, amount=amount
             )

@@ -1,10 +1,15 @@
+from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from import_export.resources import ModelResource
 
-from django.contrib import admin
-
-from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                     ShoppingCart, Tag)
+from .models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
 
 
 class RecipeResource(ModelResource):
@@ -41,6 +46,14 @@ class RecipeAdmin(ImportExportModelAdmin):
     )
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name', 'author')
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related('author')
+            .prefetch_related('ingredients', 'tags')
+        )
 
 
 class TagResource(ModelResource):
@@ -145,6 +158,14 @@ class FavoriteAdmin(ImportExportModelAdmin):
     )
     search_fields = ('user', 'recipe')
 
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related('recipe')
+            .prefetch_related('user')
+        )
+
 
 class ShoppingCartResource(ModelResource):
     """Ресурс для модели корзины покупок."""
@@ -169,3 +190,11 @@ class ShoppingCartAdmin(ImportExportModelAdmin):
         'recipe',
     )
     search_fields = ('user', 'recipe')
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related('recipe')
+            .prefetch_related('user')
+        )

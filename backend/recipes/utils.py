@@ -1,12 +1,12 @@
-from datetime import datetime
 from io import BytesIO
-
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfgen import canvas
 
 from django.conf import settings
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 
 from recipes.models import Ingredient, RecipeIngredient
 
@@ -30,7 +30,7 @@ def create_shopping_list_pdf(shopping_cart):
     height = 700
 
     for item in buy_list:
-        i = Ingredient.objects.get(pk=item.get('ingredient'))
+        i = get_object_or_404(Ingredient, pk=item.get('ingredient'))
         amount = item.get('amount')
         page.drawString(
             x=50,
@@ -39,7 +39,7 @@ def create_shopping_list_pdf(shopping_cart):
         )
         height -= 20
 
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    current_time = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
     site_address = settings.CSRF_TRUSTED_ORIGINS[0]
     page.setFont('Ubuntu-Regular', size=10)
     page.drawString(x=50, y=30, text=f'Адрес сайта: {site_address}')

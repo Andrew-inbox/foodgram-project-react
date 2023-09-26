@@ -1,8 +1,6 @@
 from colorfield.fields import ColorField
-
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.forms import ValidationError
 
 from users.models import User
 
@@ -126,17 +124,6 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    def clean(self):
-        ingredients = self.ingredients.all()
-        unique_ingredients = set()
-        for ingredient in ingredients:
-            if ingredient in unique_ingredients:
-                raise ValidationError(
-                    'Ингредиенты не должны дублироваться в рецепте'
-                )
-            unique_ingredients.add(ingredient)
-        super().clean()
-
 
 class RecipeIngredient(models.Model):
     """Модель количества ингредиентов."""
@@ -151,6 +138,7 @@ class RecipeIngredient(models.Model):
         Ingredient,
         verbose_name='Ингредиент',
         on_delete=models.CASCADE,
+        related_name='ingredient_amount',
     )
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
@@ -159,8 +147,8 @@ class RecipeIngredient(models.Model):
                 limit_value=1, message='Ингредиентов не может быть меньше 1!'
             ),
             MaxValueValidator(
-                limit_value=50000,
-                message='Ингредиентов не может быть больше 50000!',
+                limit_value=32767,
+                message='Ингредиентов не может быть больше 32767!',
             ),
         ),
     )
