@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import EmailValidator
 from django.db import models
 
-from .validators import validate_username
+from api.validators import validate_username
 
 
 class User(AbstractUser):

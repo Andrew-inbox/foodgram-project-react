@@ -30,13 +30,12 @@ def create_shopping_list_pdf(shopping_cart):
     height = 700
 
     for item in buy_list:
-        i = get_object_or_404(Ingredient, pk=item.get('ingredient'))
+        ingredient = get_object_or_404(Ingredient, pk=item.get('ingredient'))
         amount = item.get('amount')
-        page.drawString(
-            x=50,
-            y=height,
-            text=f'- {i.name} ({i.measurement_unit}) - {amount}',
+        text = (
+            f'- {ingredient.name} ({ingredient.measurement_unit}) - {amount}'
         )
+        page.drawString(x=50, y=height, text=text)
         height -= 20
 
     current_time = timezone.now().strftime('%Y-%m-%d %H:%M:%S')

@@ -75,10 +75,12 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
+        related_name='recipes',
     )
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Теги',
+        related_name='recipes',
     )
     image = models.ImageField(
         verbose_name='Фотограция',
