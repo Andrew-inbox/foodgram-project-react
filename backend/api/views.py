@@ -118,9 +118,8 @@ class UserViewSet(
 
         elif self.request.method == 'DELETE':
             user = self.request.user
-            author = User.objects.filter(pk=pk)
             subscribe, created = Subscribe.objects.filter(
-                user=user, author=author
+                user=user, author_id=pk
             ).delete()
 
             if subscribe > 0:
