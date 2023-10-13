@@ -1,23 +1,13 @@
 from io import BytesIO
 
 from django.conf import settings
-from django.db.models import Sum
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
-from recipes.models import Ingredient, RecipeIngredient
-
 
 def create_shopping_list_pdf(shopping_cart):
-    recipes = shopping_cart.values_list('recipe_id', flat=True)
-    buy_list = (
-        RecipeIngredient.objects.filter(recipe__in=recipes)
-        .values('ingredient')
-        .annotate(amount=Sum('amount'))
-    )
 
     buffer = BytesIO()
     page = canvas.Canvas(buffer)
@@ -27,16 +17,20 @@ def create_shopping_list_pdf(shopping_cart):
     page.setFont('Ubuntu-Regular', size=20)
     page.drawString(x=130, y=750, text='Список ингредиентов для рецептов')
     page.setFont('Ubuntu-Regular', size=14)
-    height = 700
-
-    for item in buy_list:
-        ingredient = get_object_or_404(Ingredient, pk=item.get('ingredient'))
-        amount = item.get('amount')
-        text = (
-            f'- {ingredient.name} ({ingredient.measurement_unit}) - {amount}'
+    down_param = 20
+    for number, ingredient in enumerate(shopping_cart, start=1):
+        page.drawString(
+            10,
+            down_param,
+            f"{number}. {ingredient['ingredient__name']}, "
+            f"{ingredient['ingredient_amount_sum']} "
+            f"{ingredient['ingredient__measurement_unit']}.",
         )
-        page.drawString(x=50, y=height, text=text)
-        height -= 20
+        down_param += 20
+        if down_param >= 780:
+            down_param = 20
+            page.showPage()
+            page.setFont('Ubuntu-Regular', size=14)
 
     current_time = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
     site_address = settings.CSRF_TRUSTED_ORIGINS[0]

@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, permissions, status, viewsets
@@ -19,7 +20,14 @@ from .serializers import (
     UserSetPasswordSerializer,
 )
 from .utils import create_shopping_list_pdf
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
 from users.models import Subscribe, User
 
 
@@ -262,8 +270,17 @@ class RecipeViewSet(
     @action(['GET'], detail=False)
     def download_shopping_cart(self, request):
         """Скачивает список покупок в формате PDF."""
-
-        shopping_cart = ShoppingCart.objects.filter(user=self.request.user)
+        shopping_cart = (
+            RecipeIngredient.objects.filter(
+                recipe__shoppingcart__user=request.user
+            )
+            .values(
+                'ingredient__name',
+                'ingredient__measurement_unit',
+            )
+            .order_by('ingredient__name')
+            .annotate(ingredient_amount_sum=Sum('amount'))
+        )
         buy_list_pdf = create_shopping_list_pdf(shopping_cart)
         response = HttpResponse(buy_list_pdf, content_type='application/pdf')
         response[

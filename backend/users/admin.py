@@ -22,6 +22,9 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('username', 'email', 'first_name', 'last_name')
     search_fields = ('username', 'email', 'first_name', 'last_name')
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('username')
+
 
 class SubscribeResource(ModelResource):
     """Модель ресурсов подписок."""
