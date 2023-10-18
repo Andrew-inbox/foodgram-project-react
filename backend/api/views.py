@@ -229,9 +229,8 @@ class RecipeViewSet(
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         elif self.request.method == 'DELETE':
             user = self.request.user
-            recipe = Recipe.objects.filter(pk=pk)
             favorite, created = Favorite.objects.filter(
-                user=user, recipe=recipe
+                user=user, recipe_id=pk
             ).delete()
 
             if favorite > 0:
