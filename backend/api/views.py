@@ -254,9 +254,8 @@ class RecipeViewSet(
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         elif self.request.method == 'DELETE':
             user = self.request.user
-            recipe = Recipe.objects.filter(pk=pk)
             shoppingcart, created = ShoppingCart.objects.filter(
-                user=user, recipe=recipe
+                user=user, recipe_id=pk
             ).delete()
 
             if shoppingcart > 0:

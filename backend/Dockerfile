@@ -6,8 +6,6 @@ COPY requirements.txt .
 
 RUN python -m pip install --upgrade pip
 
-RUN pip install gunicorn==21.2.0
-
 RUN pip install -r requirements.txt --no-cache-dir
 
 COPY . .
