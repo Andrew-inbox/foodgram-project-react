@@ -1,34 +1,15 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export.resources import ModelResource
 
 from .models import Subscribe, User
 
 
-class UserResource(ModelResource):
-    """Модель ресурсов пользователей."""
-
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'is_staff',
-            'date_joined',
-        )
-
-
 @admin.register(User)
-class UserAdmin(ImportExportModelAdmin):
-    """
-    Регистрация модели пользователей
-    и импорта/эскпорта в админ-панели.
-    """
+class UserAdmin(BaseUserAdmin):
+    """Административная панель для пользователей."""
 
-    resource_class = (UserResource,)
     list_display = (
         'id',
         'username',
@@ -38,8 +19,11 @@ class UserAdmin(ImportExportModelAdmin):
         'is_staff',
         'date_joined',
     )
-    list_filter = ('username', 'email', 'first_name', 'last_name')
+    list_display_links = list_display
     search_fields = ('username', 'email', 'first_name', 'last_name')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('auth_token')
 
 
 class SubscribeResource(ModelResource):
@@ -53,10 +37,13 @@ class SubscribeResource(ModelResource):
             'author',
         )
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('user', 'author')
+
 
 @admin.register(Subscribe)
 class SubscribeAdmin(ImportExportModelAdmin):
-    """Регистрация модели подписок и импорта/эскпорта в админ-панели."""
+    """Административная панель для модели подписок."""
 
     resource_class = (SubscribeResource,)
     list_display = (
@@ -64,10 +51,7 @@ class SubscribeAdmin(ImportExportModelAdmin):
         'user',
         'author',
     )
-    list_filter = (
-        'author',
-        'user',
-    )
+    list_display_links = list_display
     search_fields = [
         'user__username',
         'user__username',
