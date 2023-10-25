@@ -1,15 +1,34 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export.resources import ModelResource
 
 from .models import Subscribe, User
 
 
-@admin.register(User)
-class UserAdmin(BaseUserAdmin):
-    """Административная панель для пользователей."""
+class UserResource(ModelResource):
+    """Модель ресурсов пользователей."""
 
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'is_staff',
+            'date_joined',
+        )
+
+
+@admin.register(User)
+class UserAdmin(ImportExportModelAdmin):
+    """
+    Регистрация модели пользователей
+    и импорта/эскпорта в админ-панели.
+    """
+
+    resource_class = (UserResource,)
     list_display = (
         'id',
         'username',
@@ -21,9 +40,6 @@ class UserAdmin(BaseUserAdmin):
     )
     list_filter = ('username', 'email', 'first_name', 'last_name')
     search_fields = ('username', 'email', 'first_name', 'last_name')
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('username')
 
 
 class SubscribeResource(ModelResource):
@@ -37,13 +53,10 @@ class SubscribeResource(ModelResource):
             'author',
         )
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('user', 'author')
-
 
 @admin.register(Subscribe)
 class SubscribeAdmin(ImportExportModelAdmin):
-    """Административная панель для модели подписок."""
+    """Регистрация модели подписок и импорта/эскпорта в админ-панели."""
 
     resource_class = (SubscribeResource,)
     list_display = (

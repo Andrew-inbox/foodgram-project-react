@@ -5,15 +5,15 @@ from import_export.resources import ModelResource
 from .models import (
     Favorite,
     Ingredient,
+    IngredientAmount,
     Recipe,
-    RecipeIngredient,
     ShoppingCart,
     Tag,
 )
 
 
 class RecipeResource(ModelResource):
-    """Ресурс модели рецепта."""
+    """Модель ресурсов рецептов."""
 
     class Meta:
         model = Recipe
@@ -26,16 +26,16 @@ class RecipeResource(ModelResource):
 
 
 class IngredientsInline(admin.TabularInline):
-    """Встроенный класс для ингредиентов."""
+    """Меню управления ингредиентами в рецепте."""
 
-    model = RecipeIngredient
+    model = IngredientAmount
     extra = 0
     min_num = 1
 
 
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
-    """Административный класс для рецепта."""
+    """Регистрация модели рецептов и импорта/эскпорта в админ-панели."""
 
     resource_class = (RecipeResource,)
     inlines = (IngredientsInline,)
@@ -46,19 +46,10 @@ class RecipeAdmin(ImportExportModelAdmin):
     )
     list_filter = ('author', 'name', 'tags')
     search_fields = ('name', 'author')
-    autocomplete_fields = ('author', 'tags')
-
-    def get_queryset(self, request):
-        return (
-            super()
-            .get_queryset(request)
-            .select_related('author')
-            .prefetch_related('ingredients', 'tags')
-        )
 
 
 class TagResource(ModelResource):
-    """Ресурс модели тегов."""
+    """Модель ресурсов тегов."""
 
     class Meta:
         model = Tag
@@ -72,7 +63,7 @@ class TagResource(ModelResource):
 
 @admin.register(Tag)
 class TagAdmin(ImportExportModelAdmin):
-    """Модель ресурсов тегов администратора"""
+    """Регистрация модели тегов и импорта/эскпорта в админ-панели."""
 
     resource_class = (TagResource,)
     list_display = (
@@ -85,7 +76,7 @@ class TagAdmin(ImportExportModelAdmin):
 
 
 class IngredientResource(ModelResource):
-    """Ресурс для модели ингредиентов."""
+    """Модель ресурсов ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -98,7 +89,7 @@ class IngredientResource(ModelResource):
 
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
-    """Класс для администрирования ингредиентов."""
+    """Регистрация модели ингредиентов и импорта/эскпорта в админ-панели."""
 
     resource_classes = (IngredientResource,)
     list_display = (
@@ -108,11 +99,11 @@ class IngredientAdmin(ImportExportModelAdmin):
     )
 
 
-class RecipeIngredientResource(ModelResource):
-    """Ресурс для модели ингредиентов рецепта."""
+class IngredientAmountResource(ModelResource):
+    """Модель ингредиента в рецепте."""
 
     class Meta:
-        model = RecipeIngredient
+        model = IngredientAmount
         fields = (
             'id',
             'recipe',
@@ -121,11 +112,14 @@ class RecipeIngredientResource(ModelResource):
         )
 
 
-@admin.register(RecipeIngredient)
-class RecipeIngredientAdmin(ImportExportModelAdmin):
-    """Класс для администрирования ингредиентов рецепта."""
+@admin.register(IngredientAmount)
+class IngredientAmountAdmin(ImportExportModelAdmin):
+    """
+    Регистрация модели ингредиентов в рецепте и
+    импорта/эскпорта в админ-панели.
+    """
 
-    resource_classes = (RecipeIngredientResource,)
+    resource_classes = (IngredientAmountResource,)
     list_display = (
         'id',
         'recipe',
@@ -136,7 +130,7 @@ class RecipeIngredientAdmin(ImportExportModelAdmin):
 
 
 class FavoriteResource(ModelResource):
-    """Ресурс для модели избранных рецептов."""
+    """Модель ресурсов избранных рецептов."""
 
     class Meta:
         model = Favorite
@@ -149,7 +143,9 @@ class FavoriteResource(ModelResource):
 
 @admin.register(Favorite)
 class FavoriteAdmin(ImportExportModelAdmin):
-    """Класс для администрирования избранных рецептов."""
+    """
+    Регистрация модели избранных рецептов и импорта/эскпорта в админ-панели.
+    """
 
     resource_classes = (FavoriteResource,)
     list_display = (
@@ -158,14 +154,10 @@ class FavoriteAdmin(ImportExportModelAdmin):
         'recipe',
     )
     search_fields = ('user', 'recipe')
-    autocomplete_fields = ('user', 'recipe')
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('user', 'recipe')
 
 
 class ShoppingCartResource(ModelResource):
-    """Ресурс для модели корзины покупок."""
+    """Модель ресурсов рецептов в корзине."""
 
     class Meta:
         model = ShoppingCart
@@ -178,7 +170,9 @@ class ShoppingCartResource(ModelResource):
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(ImportExportModelAdmin):
-    """Класс для администрирования корзины покупок."""
+    """
+    Регистрация модели рецептов в корзине и импорта/эскпорта в админ-панели.
+    """
 
     resource_classes = (ShoppingCartResource,)
     list_display = (
@@ -187,7 +181,3 @@ class ShoppingCartAdmin(ImportExportModelAdmin):
         'recipe',
     )
     search_fields = ('user', 'recipe')
-    autocomplete_fields = ('user', 'recipe')
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('user', 'recipe')
