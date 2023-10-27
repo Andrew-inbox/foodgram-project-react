@@ -126,11 +126,11 @@ class UserViewSet(
 
         elif self.request.method == 'DELETE':
             user = self.request.user
-            subscribe, created = Subscribe.objects.filter(
+            count, deleted = Subscribe.objects.filter(
                 user=user, author_id=pk
             ).delete()
 
-            if subscribe > 0:
+            if count > 0:
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(
                 {'detail': 'Подписка не найдена'},
@@ -229,11 +229,11 @@ class RecipeViewSet(
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         elif self.request.method == 'DELETE':
             user = self.request.user
-            favorite, created = Favorite.objects.filter(
+            count, deleted = Favorite.objects.filter(
                 user=user, recipe_id=pk
             ).delete()
 
-            if favorite > 0:
+            if count > 0:
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(
                 {'detail': 'В избранном рецепта нет'},
@@ -254,11 +254,11 @@ class RecipeViewSet(
             return Response(data=response_data, status=status.HTTP_201_CREATED)
         elif self.request.method == 'DELETE':
             user = self.request.user
-            shoppingcart, created = ShoppingCart.objects.filter(
+            count, deleted = ShoppingCart.objects.filter(
                 user=user, recipe_id=pk
             ).delete()
 
-            if shoppingcart > 0:
+            if count > 0:
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(
                 {'detail': 'В корзине рецепта нет'},

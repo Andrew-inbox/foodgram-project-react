@@ -44,7 +44,7 @@ class RecipeAdmin(ImportExportModelAdmin):
         'name',
         'author',
     )
-    list_display_links = list_display
+    list_display_links = ('name',)
     search_fields = ('name', 'author__username')
     autocomplete_fields = ('author', 'tags')
 
@@ -81,7 +81,7 @@ class TagAdmin(ImportExportModelAdmin):
         'color',
         'slug',
     )
-    list_display_links = list_display
+    list_display_links = ('name',)
     search_fields = ('name', 'color', 'slug')
 
 
@@ -107,8 +107,9 @@ class IngredientAdmin(ImportExportModelAdmin):
         'name',
         'measurement_unit',
     )
-    list_display_links = list_display
-    search_fields = ('name', 'measurement_unit')
+    list_display_links = ('name',)
+    search_fields = ('name',)
+    list_filter = ('name', 'measurement_unit',)
 
 
 class RecipeIngredientResource(ModelResource):
@@ -135,8 +136,8 @@ class RecipeIngredientAdmin(ImportExportModelAdmin):
         'ingredient',
         'amount',
     )
-    list_display_links = list_display
-    search_fields = ('recipe__name', 'ingredient__name')
+    list_display_links = ('recipe',)
+    search_fields = ('recipe__author', 'recipe__tags')
 
 
 class FavoriteResource(ModelResource):
@@ -161,8 +162,8 @@ class FavoriteAdmin(ImportExportModelAdmin):
         'user',
         'recipe',
     )
-    list_display_links = list_display
-    search_fields = ('user__username', 'recipe__name')
+    list_display_links = ('user',)
+    search_fields = ('recipe__author', 'recipe__tags')
     autocomplete_fields = ('user', 'recipe')
 
     def get_queryset(self, request):
@@ -191,8 +192,8 @@ class ShoppingCartAdmin(ImportExportModelAdmin):
         'user',
         'recipe',
     )
-    list_display_links = list_display
-    search_fields = ('user__username', 'recipe__name')
+    list_display_links = ('user',)
+    search_fields = ('recipe__author', 'recipe__tags')
     autocomplete_fields = ('user', 'recipe')
 
     def get_queryset(self, request):

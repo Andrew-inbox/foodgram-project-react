@@ -19,7 +19,7 @@ class UserAdmin(BaseUserAdmin):
         'is_staff',
         'date_joined',
     )
-    list_display_links = list_display
+    list_display_links = ('username',)
     search_fields = ('username', 'email', 'first_name', 'last_name')
 
     def get_queryset(self, request):
@@ -51,7 +51,7 @@ class SubscribeAdmin(ImportExportModelAdmin):
         'user',
         'author',
     )
-    list_display_links = list_display
+    list_display_links = ('user',)
     search_fields = [
         'user__username',
         'user__username',
